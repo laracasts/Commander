@@ -268,6 +268,16 @@ class EmailNotifier extends EventListener {
 
 Because this class extends `EventListener`, that parent class will manage all the details of determining if `whenJobWasPublished` should be called.
 
+### Validation
+
+This package also includes a validation trigger automatically. As an example, when you throw a command into the command bus, it will also determine whether an associated validator object exists. If it does,
+it will call a `validate` method on this class. If it doesn't exist, it'll simply continue on. So, this gives you a nice hook to perform validation before executing the command and firing domain events.
+The convention is:
+
+- PostJobListingCommand => PostJobListingValidator
+
+So, simply create that class, and include a `validate` method, which we'll receive the `PostJobListingCommand` object. Then, perform your validation however you normally do. I recommend that, for failed validation, you throw an exception - perhaps `ValidationFailedException`. This way, either within your controller - or even `global.php` - you can handle failed validation appropriately (probably by linking back to the form and notifying the user).
+
 ## That Does It!
 
 This can be complicated stuff to read. Be sure to check out the [Commands and Domain Events](https://laracasts.com/series/commands-and-domain-events) series on [Laracasts](https://laracasts.com) to learn more about this stuff.
