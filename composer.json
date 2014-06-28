@@ -1,6 +1,7 @@
 {
     "name": "laracasts/commander",
     "description": "Commands and domain events in Laravel",
+    "license": "MIT",
     "authors": [
         {
             "name": "Jeffrey Way",
