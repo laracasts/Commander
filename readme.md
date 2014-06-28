@@ -1,4 +1,4 @@
-# Commander
+# Laravel Commander
 
 This package gives you an easy way to leverage commands and domain events in your Laravel projects.
 
@@ -38,7 +38,6 @@ To begin, we can inject this package's command bus into your controller (or a Ba
 <?php
 
 use Laracasts\Commander\CommandBus;
-use Acme\Jobs\PostJobListingCommand;
 
 class JobsController extends \BaseController {
 
@@ -62,7 +61,7 @@ class JobsController extends \BaseController {
 }
 ```
 
-Good? Next, we'll represent the "instruction" as a command. This will be nothing more than a simple DTO.
+Good? Next, we'll represent this "instruction" (to post a job listing) as a command. This will be nothing more than a simple DTO.
 
 ```php
 <?php
@@ -95,6 +94,8 @@ class JobsController extends \BaseController {
 	}
 ```
 
+> Pay attention to the namespaces for these classes to get an idea for how you might arrange your directory tree.
+
 ### The Command DTO
 
 Pretty simply, huh? We make a command to represent the instruction, and then we throw that command into a command bus.
@@ -125,7 +126,7 @@ By default, the command bus will do a quick search and replace on the name of th
 - PostJobListingCommand => PostJobListingCommandHandler
 - ArchiveJobCommand => ArchiveJobCommandHandler
 
-Makes sense?
+Make sense?
 
 ### The Handler Class
 
@@ -143,16 +144,17 @@ class PostJobListingCommandHandler implements CommandHandler {
 
     public function handle($command)
     {
-        $job = Job::publish($command->title, $command->description);
+        $job = Job::post($command->title, $command->description);
 
         $this->dispatchEventsFor($job);
+
+        return $job;
     }
 
 }
 ```
 
-For this demo, our handler is fairly simple. In real-life, more would be going on here. Notice that `
-dispatchEventsFor` method? This will handle the process of firing all queued events for your entity. This way, other parts of your app may listen
+For this demo, our handler is fairly simple. In real-life, more would be going on here. Notice that `dispatchEventsFor` method? This will handle the process of firing all queued events for your entity. This way, other parts of your app may listen
 for when a job has been published, and respond accordingly.
 
 ### Raising an Event
@@ -171,7 +173,7 @@ class Job extends \Eloquent {
 
     protected $fillable = ['title', 'description'];
 
-    public static function publish($title, $description)
+    public static function post($title, $description)
     {
         // We're ignoring persistence for this demo
         $job = new static(compact('title', 'description'));
@@ -189,16 +191,42 @@ Pay close to attention to where we raise that event.
 $job->raise(new JobWasPublished($job));
 ```
 
-Once again, this `JobWasPublished` object is nothing more than a simple transport object. Also,
-the `raise` method is available through that `EventGenerator` trait.
+Once again, this `JobWasPublished` object is nothing more than a simple transport object.
+
+```php
+<?php namespace Acme\Jobs\Events;
+
+use Acme\Jobs\Job;
+
+class JobWasPublished {
+
+    public $job;
+
+    public function __construct(Job $job) /* or pass in just the relevant fields */
+    {
+        $this->job = $job;
+    }
+
+}
+```
+
+Also, the `raise` method is available through that `EventGenerator` trait. It simply stores the event in an array.
 
 ### Event Listeners
 
 Now, because the handler class dispatched all events, that means you can register any number of listeners. The event name to listen for follows, once again, a simple convention:
 
-- Path\To\Event => Path.To.Event
+- Path\To\Raised\Event => Path.To.Raised.Event
 
-So, essentially, we replace slashes with periods to make it appear just a bit more object-oriented. Let's register a basic event listener to fire off an email.
+So, essentially, we replace slashes with periods to make it appear just a bit more object-oriented. So, if we raise:
+
+- Acme\Jobs\Events\JobWasPublished
+
+Then, the event to listen for will be:
+
+- Acme.Jobs.Events.JobWasPublished
+
+Let's register a basic event listener to fire off an email.
 
 ```php
 Event::listen('Acme.Jobs.Events.JobWasPublished', function($event)
