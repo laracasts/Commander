@@ -8,7 +8,7 @@ Per usual, install Commander through Composer.
 
 ```js
 "require": {
-    "laracasts/commander": "1.0.*"
+    "laracasts/commander": "1.1.*"
 }
 ```
 
