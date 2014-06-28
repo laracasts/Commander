@@ -278,6 +278,82 @@ The convention is:
 
 So, simply create that class, and include a `validate` method, which we'll receive the `PostJobListingCommand` object. Then, perform your validation however you normally do. I recommend that, for failed validation, you throw an exception - perhaps `ValidationFailedException`. This way, either within your controller - or even `global.php` - you can handle failed validation appropriately (probably by linking back to the form and notifying the user).
 
+## Overriding Paths
+
+By default, this package makes some assumptions about your file structure. As demonstrated above:
+
+- Path/To/PostJobListingCommand => Path/To/PostJobListingCommandHandler
+- Path/To/PostJobListingCommand => Path/To/PostJobListingValidator
+
+Perhaps you had something different in mind. No problem! Just create your own command translator class that implements the `Laracasts\Commander\CommandTranslator` interface. This interface includes two methods:
+
+- `toCommandHandler`
+- `toValidator`
+
+Maybe you want to place your validators within a `Validators/` directory. Okay:
+
+```php
+<?php namespace Acme\Core;
+
+use Laracasts\Commander\CommandTranslator;
+
+class MyCommandTranslator implements CommandTranslator {
+
+    /**
+     * Translate a command to its handler counterpart
+     *
+     * @param $command
+     * @return mixed
+     * @throws HandlerNotRegisteredException
+     */
+    public function toCommandHandler($command)
+    {
+        $handler = str_replace('Command', 'Handler', get_class($command));
+
+        if ( ! class_exists($handler))
+        {
+            $message = "Command handler [$handler] does not exist.";
+
+            throw new HandlerNotRegisteredException($message);
+        }
+
+        return $handler;
+    }
+
+    /**
+     * Translate a command to its validator counterpart
+     *
+     * @param $command
+     * @return mixed
+     */
+    public function toValidator($command)
+    {
+        $segments = explode('\\', get_class($command));
+
+        array_splice($segments, -1, false, 'Validators');
+
+        return str_replace('Command', 'Validator', implode('\\', $segments));
+    }
+
+}
+```
+
+Now, a `Path/To/MyGreatCommand` will look for a `Path/To/Validators/MyGreatValidator` class instead.
+
+> It might be useful to copy and paste the `Laracasts\Commander\BasicCommandTranslator` class, and then modify as needed.
+
+The only remaining step is to update the binding in the IoC container.
+
+```php
+// We want to use our own custom translator class
+App::bind(
+    'Laracasts\Commander\CommandTranslator',
+    'Acme\Core\MyCommandTranslator'
+);
+```
+
+Done!
+
 ## That Does It!
 
 This can be complicated stuff to read. Be sure to check out the [Commands and Domain Events](https://laracasts.com/series/commands-and-domain-events) series on [Laracasts](https://laracasts.com) to learn more about this stuff.
