@@ -4,6 +4,12 @@ use ReflectionClass;
 
 abstract class EventListener {
 
+    /**
+     * Handle the event
+     *
+     * @param $event
+     * @return mixed
+     */
     public function handle($event)
     {
         $eventName = $this->getEventName($event);
@@ -15,6 +21,8 @@ abstract class EventListener {
     }
 
     /**
+     * Figure out what the name of the class is.
+     *
      * @param $event
      * @return string
      */
@@ -24,6 +32,9 @@ abstract class EventListener {
     }
 
     /**
+     * Determine if a method in the subclass is registered
+     * for this particular event.
+     *
      * @param $eventName
      * @return bool
      */
@@ -33,4 +44,5 @@ abstract class EventListener {
 
         return method_exists($this, $method);
     }
+
 } 

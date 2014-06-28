@@ -25,6 +25,8 @@ class DefaultCommandBus implements CommandBus {
     }
 
     /**
+     * Execute the command
+     *
      * @param $command
      * @return mixed
      */
