@@ -1,7 +1,5 @@
 <?php namespace Laracasts\Commander;
 
-use Exception;
-
 class BasicCommandTranslator implements CommandTranslator {
 
     /**
@@ -9,7 +7,7 @@ class BasicCommandTranslator implements CommandTranslator {
      *
      * @param $command
      * @return mixed
-     * @throws Exception
+     * @throws HandlerNotRegisteredException
      */
     public function toCommandHandler($command)
     {
@@ -19,7 +17,7 @@ class BasicCommandTranslator implements CommandTranslator {
         {
             $message = "Command handler [$handler] does not exist.";
 
-            throw new Exception($message);
+            throw new HandlerNotRegisteredException($message);
         }
 
         return $handler;
