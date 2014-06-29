@@ -245,7 +245,7 @@ First, let's setup an `EmailNotifier` class that will be given a chance to handl
 Event::listen('Acme.*', 'Acme\Listeners\EmailNotifier');
 ```
 
-So, now, any time that you raise an event in the `Acme` namespace, once dispached, the `EmailNotifier` class' handle method will fire. Naturally, though,
+So, now, any time that you raise an event in the `Acme` namespace, once dispatched, the `EmailNotifier` class' handle method will fire. Naturally, though,
 we don't need to respond to *every* event! Just a few. Well, once again, we can follow a simple method naming convention to respond to only the events that we are interested in.
 
 The `JobWasPublished` event class will look for a `whenJobWasPublished` method on your event listener. If it exists, it will call it. Otherwise, it'll simply continue on. That means our `EmailNotifier` class might look like so:
