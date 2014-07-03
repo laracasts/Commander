@@ -11,7 +11,8 @@ class BasicCommandTranslator implements CommandTranslator {
      */
     public function toCommandHandler($command)
     {
-        $handler = str_replace('Command', 'CommandHandler', get_class($command));
+        $commandClass = get_class($command);
+        $handler = substr_replace($commandClass, 'CommandHandler', strrpos($commandClass, 'Command'));
 
         if ( ! class_exists($handler))
         {
@@ -31,7 +32,8 @@ class BasicCommandTranslator implements CommandTranslator {
      */
     public function toValidator($command)
     {
-        return str_replace('Command', 'Validator', get_class($command));
+        $commandClass = get_class($command);
+        return substr_replace($commandClass, 'Validator', strrpos($commandClass, 'Command'));
     }
 
 } 
