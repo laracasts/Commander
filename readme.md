@@ -22,8 +22,7 @@ Next, update `app/config/app.php` to include a reference to this package's servi
 
 ## Usage
 
-Easily, the most important piece of advice I can offer is to keep in mind that this approach isn't for everything. If you're building a simple CRUD app that does not
-have much business logic, then you likely don't need this. Still want to move ahead? Okay - onward!
+Easily, the most important piece of advice I can offer is to keep in mind that this approach isn't for everything. If you're building a simple CRUD app that does not have much business logic, then you likely don't need this. Still want to move ahead? Okay - onward!
 
 ### The Goal
 
@@ -32,24 +31,19 @@ Well, don't put all that stuff into your controller! Instead, let's leverage com
 
 ### The Controller
 
-To begin, we can inject this package's command bus into your controller (or a BaseController, if you wish).
+To begin, we can inject this package's `CommanderTrait` into your controller (or a BaseController, if you wish). This will give you a couple helper methods to manage the process of passing commands to the command bus.
 
 ```php
 <?php
 
-use Laracasts\Commander\CommandBus;
+use Laracasts\Commander\CommanderTrait;
 
 class JobsController extends \BaseController {
 
-	protected $commandBus;
-
-	public function __construct(CommandBus $commandBus)
-	{
-		$this->commandBus = $commandBus;
-	}
+	use CommanderTrait;
 
 	/**
-	 * Post the new job listing.
+	 * Publish the new job listing.
 	 *
 	 * @return Response
 	 */
@@ -66,17 +60,12 @@ Good? Next, we'll represent this "instruction" (to post a job listing) as a comm
 ```php
 <?php
 
-use Laracasts\Commander\CommandBus;
+use Laracasts\Commander\CommanderTrait;
 use Acme\Jobs\PostJobListingCommand;
 
 class JobsController extends \BaseController {
 
-	protected $commandBus;
-
-	public function __construct(CommandBus $commandBus)
-	{
-		$this->commandBus = $commandBus;
-	}
+	use CommanderTrait;
 
 	/**
 	 * Post the new job listing.
@@ -85,16 +74,14 @@ class JobsController extends \BaseController {
 	 */
 	public function store()
 	{
-	    // We'll just simulate form data as the two arguments...
-		$command = new PostJobListingCommand('Demo Title', 'Demo Description');
-
-		$this->commandBus->execute($command);
+	    // Fetch the input from a job form, presumably...
+        $this->execute(PostJobListingCommand::class);
 
 		return Redirect::home();
 	}
 ```
 
-> Pay attention to the namespaces for these classes to get an idea for how you might arrange your directory tree.
+Notice how we are representing the user's instruction (or command) as a readable class: `PostJobListingCommand`.
 
 ### The Command DTO
 
@@ -119,6 +106,8 @@ class PostJobListingCommand {
 }
 ```
 
+> When you call the `execute` method on the `CommanderTrait`, it will automatically map the data from `Input::all()` to your command. You won't need to worry about doing that manually.
+
 So what exactly does the command bus do? Think of it as a simple utility that will translate this command into an associated handler class that will, well, handle the command! In this case, that means delegating as needed to post the new job listing.
 
 By default, the command bus will do a quick search and replace on the name of the command class to figure out which handler class to resolve out of the IoC container. As such:
@@ -126,11 +115,40 @@ By default, the command bus will do a quick search and replace on the name of th
 - PostJobListingCommand => PostJobListingCommandHandler
 - ArchiveJobCommand => ArchiveJobCommandHandler
 
-Make sense?
+Make sense? Good. Keep in mind, though, that if you prefer a different naming convention, you can override the defaults. See below.
+
+### Decorating the Command Bus
+
+There may be times when you want to decorate the command bus to first perform some kind of action...maybe you need to first sanitize some data. Well, that's easy. First create a class that implements the `Laracasts\Commander\CommandBus` contract...
+
+```php
+<?php namespace Acme\Jobs;
+
+use Laracasts\Commander\CommandBus;
+
+class JobSanitizer implements CommandBus {
+
+    public function execute($command)
+    {
+       // sanitize the job data
+    }
+
+}
+```
+
+...and now reference this class, when you execute the command in your controller.
+
+```php
+$this->execute(PostJobListingCommand::class, null, [
+    'JobSanitizer'
+]);
+```
+
+And that's it! Now, you have a hook to sanitize the command/data before it's passed on to the handler class. On that note...
 
 ### The Handler Class
 
-Let's create that first handler class now:
+Let's create our first handler class now:
 
 ```php
 <?php namespace Acme\Jobs;
