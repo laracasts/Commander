@@ -74,14 +74,13 @@ class JobsController extends \BaseController {
 	 */
 	public function store()
 	{
-	    // Fetch the input from a job form, presumably...
         $this->execute(PostJobListingCommand::class);
 
 		return Redirect::home();
 	}
 ```
 
-Notice how we are representing the user's instruction (or command) as a readable class: `PostJobListingCommand`.
+Notice how we are representing the user's instruction (or command) as a readable class: `PostJobListingCommand`. The `execute` method will expect the command's class path, as a string. Above, we're using the helpful `PostJobListingCommand::class` to fetch this. Alternatively, you could manually write out the path as a string.
 
 ### The Command DTO
 
@@ -119,7 +118,7 @@ Make sense? Good. Keep in mind, though, that if you prefer a different naming co
 
 ### Decorating the Command Bus
 
-There may be times when you want to decorate the command bus to first perform some kind of action...maybe you need to first sanitize some data. Well, that's easy. First create a class that implements the `Laracasts\Commander\CommandBus` contract...
+There may be times when you want to decorate the command bus to first perform some kind of action...maybe you need to first sanitize some data. Well, that's easy. First, create a class that implements the `Laracasts\Commander\CommandBus` contract...
 
 ```php
 <?php namespace Acme\Jobs;
