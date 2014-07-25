@@ -193,7 +193,7 @@ class Job extends \Eloquent {
     public static function post($title, $description)
     {
         // We're ignoring persistence for this demo
-        $job = new static(compact('title', 'description'));
+        $job = static::create(compact('title', 'description'));
 
         $job->raise(new JobWasPublished($job));
 
