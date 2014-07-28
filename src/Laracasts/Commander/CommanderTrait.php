@@ -56,15 +56,30 @@ trait CommanderTrait {
      */
     protected function mapInputToCommand($command, array $input)
     {
-        $dependencies = [];
-
         $class = new ReflectionClass($command);
 
-        $parameters = ($hasConstructor = !is_null($class->getConstructor()))
-            ? $class->getConstructor()->getParameters()
-            : $class->getProperties(\ReflectionProperty::IS_PUBLIC);
+        if (is_null($class->getConstructor())) {
+            return $this->mapInputToCommandProperties($command, $input, $class);
+        } else {
+            return $this->mapInputToCommandConstructor($command, $input, $class);
+        }
+    }
 
-        foreach ($parameters as $parameter)
+    /**
+     * Map an array of input to a command's properties via its constructor
+     *
+     * @param  $command
+     * @param  array $input
+     * @param  $class
+     * @throws InvalidArgumentException
+     *
+     * @return mixed
+     */
+    protected function mapInputToCommandConstructor($command, array $input, $class)
+    {
+        $dependencies = [];
+
+        foreach ($class->getConstructor()->getParameters() as $parameter)
         {
             $name = $parameter->getName();
 
@@ -72,7 +87,7 @@ trait CommanderTrait {
             {
                 $dependencies[] = $input[$name];
             }
-            elseif ($hasConstructor && $parameter->isDefaultValueAvailable())
+            elseif ($parameter->isDefaultValueAvailable())
             {
                 $dependencies[] = $parameter->getDefaultValue();
             }
@@ -83,5 +98,31 @@ trait CommanderTrait {
         }
 
         return $class->newInstanceArgs($dependencies);
+    }
+
+    /**
+     * Map an array of input to a command's properties via its public properties
+     *
+     * @param  $command
+     * @param  array $input
+     * @param  $class
+     *
+     * @return mixed
+     */
+    protected function mapInputToCommandProperties($command, array $input, $class)
+    {
+        $instance = $class->newInstance();
+
+        foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $parameter)
+        {
+            $name = $parameter->getName();
+
+            if (array_key_exists($name, $input))
+            {
+                $instance->$name = $input[$name];
+            }
+        }
+
+        return $instance;
     }
 }
