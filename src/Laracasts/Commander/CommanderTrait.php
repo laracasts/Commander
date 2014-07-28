@@ -60,7 +60,11 @@ trait CommanderTrait {
 
         $class = new ReflectionClass($command);
 
-        foreach ($class->getConstructor()->getParameters() as $parameter)
+        $parameters = ($hasConstructor = !is_null($class->getConstructor()))
+            ? $class->getConstructor()->getParameters()
+            : $class->getProperties(\ReflectionProperty::IS_PUBLIC);
+
+        foreach ($parameters as $parameter)
         {
             $name = $parameter->getName();
 
@@ -68,7 +72,7 @@ trait CommanderTrait {
             {
                 $dependencies[] = $input[$name];
             }
-            elseif ($parameter->isDefaultValueAvailable())
+            elseif ($hasConstructor && $parameter->isDefaultValueAvailable())
             {
                 $dependencies[] = $parameter->getDefaultValue();
             }
@@ -80,5 +84,4 @@ trait CommanderTrait {
 
         return $class->newInstanceArgs($dependencies);
     }
-
 }
