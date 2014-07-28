@@ -22,10 +22,12 @@ class ValidationCommandBusSpec extends ObjectBehavior
         ExampleCommand $command,
         ExampleValidator $validator
     ) {
+        // Responsibility group #1
         $translator->toValidator($command)->willReturn(ExampleValidator::class);
         $application->make(ExampleValidator::class)->willReturn($validator);
         $validator->validate($command)->willThrow('RuntimeException');
 
+        // Responsibility group #2
         $translator->toCommandHandler($command)->willReturn(ExampleCommand::class);
         $application->make(ExampleCommand::class)->willReturn($handler);
         $handler->handle($command)->shouldNotBeCalled();
@@ -40,9 +42,11 @@ class ValidationCommandBusSpec extends ObjectBehavior
         ExampleCommand $command,
         ExampleValidator $validator
     ) {
+        // Responsibility group #1
         $translator->toValidator($command)->willReturn(ExampleValidator::class);
         $application->make(ExampleValidator::class)->willReturn($validator);
 
+        // Responsibility group #2
         $translator->toCommandHandler($command)->willReturn(ExampleCommand::class);
         $application->make(ExampleCommand::class)->willReturn($handler);
         $handler->handle($command)->shouldBeCalled();
