@@ -1,6 +1,19 @@
 <?php namespace Laracasts\Commander;
 
-class ValidationCommandBus extends DefaultCommandBus {
+use Illuminate\Foundation\Application;
+
+class ValidationCommandBus implements CommandBus {
+
+    private $bus;
+    private $app;
+    private $commandTranslator;
+
+    function __construct(CommandBus $bus, Application $app, CommandTranslator $commandTranslator)
+    {
+        $this->bus = $bus;
+        $this->app = $app;
+        $this->commandTranslator = $commandTranslator;
+    }
 
     /**
      * Execute a command with validation.
@@ -16,7 +29,7 @@ class ValidationCommandBus extends DefaultCommandBus {
 
         // When we're done, we'll move up the stack
         // and handle the rest.
-        return parent::execute($command);
+        return $this->bus->execute($command);
     }
 
     /**
