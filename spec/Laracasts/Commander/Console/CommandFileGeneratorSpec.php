@@ -8,7 +8,7 @@ use Illuminate\Filesystem\Filesystem;
 use Mustache_Engine;
 use Laracasts\Commander\Console\CommandParametersParser;
 
-class CommanderGenerateCommandSpec extends ObjectBehavior {
+class FileGeneratorSpec extends ObjectBehavior {
 
     function let(Filesystem $file, Mustache_Engine $mustache, CommandParametersParser $parser)
     {
@@ -20,7 +20,7 @@ class CommanderGenerateCommandSpec extends ObjectBehavior {
         $input = [
             'path' => 'SomeCommand',
             '--properties' => 'first, last',
-            'base' => 'foo'
+            '--base' => 'foo'
         ];
 
         $stub = 'class SomeCommand {}';
@@ -31,15 +31,15 @@ class CommanderGenerateCommandSpec extends ObjectBehavior {
 
         $file->put('foo/'.$input['path'].'.php', $stub)->shouldBeCalled();
 
-        $this->generateCommandClass($input['path'], $input['--properties'], $input['base']);
+        $this->make($input['path'], 'foo.stub', $input['--base'], $input['--properties']);
     }
 
     function it_creates_a_handler_class(Filesystem $file, CommandParametersParser $parser, Mustache_Engine $mustache )
     {
         $input = [
-            'path' => 'SomeCommand',
+            'path' => 'SomeCommandHandler',
             '--properties' => 'first, last',
-            'base' => 'foo'
+            '--base' => 'foo'
         ];
 
         $stub = 'class SomeCommandHandler {}';
@@ -48,9 +48,9 @@ class CommanderGenerateCommandSpec extends ObjectBehavior {
         $parser->parse($input['path'], $input['--properties'])->willReturn([]);
         $mustache->render('template', [])->shouldBeCalled()->willReturn($stub);
 
-        $file->put('foo/'.$input['path'].'Handler.php', $stub)->shouldBeCalled();
+        $file->put('foo/'.$input['path'].'.php', $stub)->shouldBeCalled();
 
-        $this->generateHandlerClass($input['path'], $input['--properties'], $input['base']);
+        $this->make($input['path'], 'foo.stub', $input['--base'], $input['--properties']);
     }
 
 }

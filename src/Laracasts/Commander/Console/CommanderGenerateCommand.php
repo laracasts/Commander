@@ -36,20 +36,19 @@ class CommanderGenerateCommand extends Command {
      * @var CommandParametersParser
      */
     protected $parser;
+    /**
+     * @var FileGenerator
+     */
+    private $generator;
 
     /**
      * Create a new command instance.
      *
-     * @param Filesystem $file
-     * @param Mustache_Engine $mustache
-     * @param CommandParametersParser $parser
-     * @return CommanderGenerateCommand
+     * @param FileGenerator $generator
      */
-    public function __construct(Filesystem $file, Mustache_Engine $mustache, CommandParametersParser $parser)
+    public function __construct(CommandFileGenerator $generator)
     {
-        $this->file = $file;
-        $this->mustache = $mustache;
-        $this->parser = $parser;
+        $this->generator = $generator;
 
         parent::__construct();
     }
@@ -61,73 +60,20 @@ class CommanderGenerateCommand extends Command {
      */
     public function fire()
     {
-        $path = str_replace('\\', '/', $this->argument('path'));
+        $classPath = str_replace('\\', '/', $this->argument('path'));
         $properties = $this->option('properties');
         $base = $this->option('base');
 
-        $this->generateCommandClass($path, $properties, $base);
-        $this->generateHandlerClass($path, $properties, $base);
+        $commandStub = __DIR__.'/stubs/command.stub';
+        $handlerStub = __DIR__.'/stubs/handler.stub';
+
+        // We'll generate Command and CommandHandler classes.
+        $this->generator->make($classPath, $commandStub, $base, $properties);
+        $this->generator->make($classPath.'Handler', $handlerStub, $base, $properties);
+
+        $this->info('All done! Your two classes have now been generated.');
     }
 
-    /**
-     * @param $path
-     * @param $properties
-     * @param $base
-     */
-    public function generateCommandClass($path, $properties, $base)
-    {
-        $templateVars = $this->parser->parse($path, $properties);
-        $stub = $this->render(__DIR__.'/stubs/command.stub', $templateVars);
-
-        $this->write("{$path}.php", $stub, $base);
-    }
-
-    /**
-     * @param $path
-     * @param $properties
-     * @param $base
-     */
-    public function generateHandlerClass($path, $properties, $base)
-    {
-        $templateVars = $this->parser->parse($path, $properties);
-        $stub = $this->render(__DIR__.'/stubs/handler.stub', $templateVars);
-
-        $this->write("{$path}Handler.php", $stub, $base);
-    }
-
-    /**
-     * Compile the stub against the template vars.
-     *
-     * @param $stub
-     * @param $templateVars
-     * @return string
-     */
-    protected function render($stub, $templateVars)
-    {
-        $stub = $this->file->get($stub);
-
-        return $this->mustache->render($stub, $templateVars);
-    }
-
-    /**
-     * Write the new file to disk.
-     *
-     * @param $path
-     * @param $stub
-     * @param $base
-     */
-    protected function write($path, $stub, $base)
-    {
-        $path = $base.'/'.$path;
-
-        $this->file->put($path, $stub);
-    }
-
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
     protected function getArguments()
     {
         return [

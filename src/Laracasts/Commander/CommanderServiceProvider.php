@@ -66,7 +66,7 @@ class CommanderServiceProvider extends ServiceProvider {
     {
         $this->app->bindShared('commander.command.make', function($app)
         {
-            return new CommanderGenerateCommand($app['files'], new Mustache_Engine, new CommandParametersParser);
+            return $app->make('Laracasts\Commander\Console\CommanderGenerateCommand');
         });
 
         $this->commands('commander.command.make');
