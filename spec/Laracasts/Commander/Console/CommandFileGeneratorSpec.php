@@ -8,7 +8,7 @@ use Illuminate\Filesystem\Filesystem;
 use Mustache_Engine;
 use Laracasts\Commander\Console\CommandParametersParser;
 
-class FileGeneratorSpec extends ObjectBehavior {
+class CommandFileGeneratorSpec extends ObjectBehavior {
 
     function let(Filesystem $file, Mustache_Engine $mustache, CommandParametersParser $parser)
     {
