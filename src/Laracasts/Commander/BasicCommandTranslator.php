@@ -33,6 +33,7 @@ class BasicCommandTranslator implements CommandTranslator {
     public function toValidator($command)
     {
         $commandClass = get_class($command);
+        
         return substr_replace($commandClass, 'Validator', strrpos($commandClass, 'Command'));
     }
 
