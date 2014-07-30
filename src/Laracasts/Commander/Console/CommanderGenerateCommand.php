@@ -102,7 +102,7 @@ class CommanderGenerateCommand extends Command {
      * @param $templateVars
      * @return string
      */
-    public function render($stub, $templateVars)
+    protected function render($stub, $templateVars)
     {
         $stub = $this->file->get($stub);
 
@@ -116,7 +116,7 @@ class CommanderGenerateCommand extends Command {
      * @param $stub
      * @param $base
      */
-    private function write($path, $stub, $base)
+    protected function write($path, $stub, $base)
     {
         $path = $base.'/'.$path;
 
