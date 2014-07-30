@@ -2,7 +2,7 @@
 
 use Laracasts\Commander\CommandHandler;
 
-class {{ name }} implements CommandHandler {
+class {{ name }}Handler implements CommandHandler {
 
     /**
      * Handle the command.
