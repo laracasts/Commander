@@ -387,19 +387,13 @@ This will generate both `SubscribeUserCommand` and a `SubscribeUserCommandHandle
 ```php
 <?php namespace Acme\Bar;
 
-use Laracasts\Commander\CommandHandler;
-
-class SubscribeUserCommand implements CommandHandler {
+class SubscribeUserCommand {
 
     /**
-     * Handle the command
-     *
-     * @param object $command
-     * @return void
+     * Constructor
      */
-    public function handle($command)
+    public function __construct()
     {
-
     }
 
 }
