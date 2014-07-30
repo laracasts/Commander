@@ -27,7 +27,7 @@ class CommandParametersParser {
      * @param $properties
      * @return mixed
      */
-    public function parseProperties($properties)
+    protected function parseProperties($properties)
     {
         $properties = preg_split('/ ?, ?/', $properties, null, PREG_SPLIT_NO_EMPTY);
 
@@ -41,7 +41,7 @@ class CommandParametersParser {
      * @param $properties
      * @return mixed
      */
-    public function parseArgumentsFromProperties($properties)
+    protected function parseArgumentsFromProperties($properties)
     {
         if ( ! $properties) return null;
 
