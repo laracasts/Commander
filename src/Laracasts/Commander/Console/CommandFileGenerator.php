@@ -40,6 +40,7 @@ class CommandFileGenerator {
      * @param $stub
      * @param $base
      * @param $properties
+     * @return string
      */
     public function make($classPath, $stub, $base, $properties)
     {
@@ -53,21 +54,9 @@ class CommandFileGenerator {
         $stub = $this->mustache->render($stub, $templateVars);
 
         // And finally write the file to the disk.
-        return $this->write("{$classPath}.php", $stub, $base);
-    }
+        $this->file->put("{$base}/{$classPath}.php", $stub);
 
-    /**
-     * Write the new file to disk.
-     *
-     * @param $path
-     * @param $stub
-     * @param $base
-     */
-    protected function write($path, $stub, $base)
-    {
-        $path = $base.'/'.$path;
-
-        $this->file->put($path, $stub);
+        return $stub;
     }
 
 } 
