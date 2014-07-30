@@ -380,7 +380,7 @@ Simply run:
 php artisan commander:generate Acme/Bar/SubscribeUserCommand
 ```
 
-This will generate both `SubscribeUserCommand` and a `SubscribeUserCommandHandler` classes:
+This will generate both `SubscribeUserCommand` and a `SubscribeUserCommandHandler` classes. By default, it will look for that "Acme" directory within "app/". If your base domain directory is somewhere else, pass the `--base="src"`.
 
 #### The Command
 
