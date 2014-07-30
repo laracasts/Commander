@@ -406,7 +406,7 @@ class SubscribeUserCommand {
 
 use Laracasts\Commander\CommandHandler;
 
-class SubscribeUserCommand implements CommandHandler {
+class SubscribeUserCommandHandler implements CommandHandler {
 
     /**
      * Handle the command.
