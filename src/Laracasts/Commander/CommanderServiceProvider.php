@@ -1,6 +1,9 @@
 <?php namespace Laracasts\Commander;
 
 use Illuminate\Support\ServiceProvider;
+use Laracasts\Commander\Console\CommandParametersParser;
+use Laracasts\Commander\Console\CommanderGenerateCommand;
+use Mustache_Engine;
 
 class CommanderServiceProvider extends ServiceProvider {
 
@@ -21,6 +24,8 @@ class CommanderServiceProvider extends ServiceProvider {
         $this->registerCommandTranslator();
 
         $this->registerCommandBus();
+
+        $this->registerArtisanCommand();
     }
 
     /**
@@ -50,6 +55,21 @@ class CommanderServiceProvider extends ServiceProvider {
         {
             return $this->app->make('Laracasts\Commander\ValidationCommandBus');
         });
+    }
+
+    /**
+     * Register the Artisan command
+     *
+     * @return void
+     */
+    public function registerArtisanCommand()
+    {
+        $this->app->bindShared('commander.command.make', function($app)
+        {
+            return new CommanderGenerateCommand($app['files'], new Mustache_Engine, new CommandParametersParser);
+        });
+
+        $this->commands('commander.command.make');
     }
 
 }
