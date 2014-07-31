@@ -59,23 +59,22 @@ trait CommanderTrait {
         $class = new ReflectionClass($command);
 
         if (is_null($class->getConstructor())) {
-            return $this->mapInputToCommandProperties($command, $input, $class);
+            return $this->mapInputToCommandProperties($input, $class);
         } else {
-            return $this->mapInputToCommandConstructor($command, $input, $class);
+            return $this->mapInputToCommandConstructor($input, $class);
         }
     }
 
     /**
      * Map an array of input to a command's properties via its constructor
      *
-     * @param  $command
      * @param  array $input
      * @param  $class
      * @throws InvalidArgumentException
      *
      * @return mixed
      */
-    protected function mapInputToCommandConstructor($command, array $input, $class)
+    protected function mapInputToCommandConstructor(array $input, $class)
     {
         $dependencies = [];
 
@@ -103,13 +102,12 @@ trait CommanderTrait {
     /**
      * Map an array of input to a command's properties via its public properties
      *
-     * @param  $command
      * @param  array $input
      * @param  $class
      *
      * @return mixed
      */
-    protected function mapInputToCommandProperties($command, array $input, $class)
+    protected function mapInputToCommandProperties(array $input, $class)
     {
         $instance = $class->newInstance();
 
