@@ -121,6 +121,10 @@ trait CommanderTrait {
             {
                 $instance->$name = $input[$name];
             }
+            else
+            {
+                throw new InvalidArgumentException("Unable to map input to command: {$name}");
+            }
         }
 
         return $instance;
