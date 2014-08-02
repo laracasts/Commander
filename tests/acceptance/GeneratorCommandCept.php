@@ -11,7 +11,6 @@ $I->runShellCommand("php ../../../artisan commander:generate $commandToGenerate 
 $I->seeInShellOutput('All done!');
 
 // My Command stub should match the generated class.
-
 $I->openFile("{$saveDir}/{$commandToGenerate}.php");
 $I->seeFileContentsEqual(file_get_contents("{$stubDir}/{$commandToGenerate}.stub"));
 

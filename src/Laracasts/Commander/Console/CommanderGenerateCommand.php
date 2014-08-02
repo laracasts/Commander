@@ -67,9 +67,7 @@ class CommanderGenerateCommand extends Command {
         $properties = $this->option('properties');
         $base = $this->option('base');
 
-        // Parse the input for the Artisan command into a usable format.
-        $input = $this->parser->parse($path, $properties);
-
+        // Parse the command input.
         $commandInput = $this->parser->parse($path, $properties);
         $handlerInput = $this->parser->parse($path.'Handler', $properties);
 
