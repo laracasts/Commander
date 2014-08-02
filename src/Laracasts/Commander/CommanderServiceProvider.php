@@ -1,9 +1,7 @@
 <?php namespace Laracasts\Commander;
 
 use Illuminate\Support\ServiceProvider;
-use Laracasts\Commander\Console\CommandParametersParser;
-use Laracasts\Commander\Console\CommanderGenerateCommand;
-use Mustache_Engine;
+use Laracasts\Commander\Console\CommandInputParser;
 
 class CommanderServiceProvider extends ServiceProvider {
 

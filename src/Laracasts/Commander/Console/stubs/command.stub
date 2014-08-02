@@ -10,8 +10,6 @@ class {{ name }} {
 
     {{/ properties}}
     /**
-     * Constructor
-     *
      {{# properties }}
      * @param string {{ . }}
      {{/ properties }}

@@ -13,8 +13,6 @@ class FooCommand {
     public $baz;
 
     /**
-     * Constructor
-     *
      * @param string bar
      * @param string baz
      */

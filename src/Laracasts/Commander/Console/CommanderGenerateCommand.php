@@ -33,21 +33,24 @@ class CommanderGenerateCommand extends Command {
     protected $mustache;
 
     /**
-     * @var CommandParametersParser
+     * @var CommandInputParser
      */
     protected $parser;
+
     /**
-     * @var FileGenerator
+     * @var CommandGenerator
      */
-    private $generator;
+    protected $generator;
 
     /**
      * Create a new command instance.
      *
-     * @param FileGenerator $generator
+     * @param CommandInputParser $parser
+     * @param CommandGenerator $generator
      */
-    public function __construct(CommandFileGenerator $generator)
+    public function __construct(CommandInputParser $parser, CommandGenerator $generator)
     {
+        $this->parser = $parser;
         $this->generator = $generator;
 
         parent::__construct();
@@ -60,16 +63,32 @@ class CommanderGenerateCommand extends Command {
      */
     public function fire()
     {
-        $classPath = str_replace('\\', '/', $this->argument('path'));
+        // Parse the input for the Artisan command into a usable format.
+        $input = $this->parser->parse(
+            $this->argument('path'),
+            $this->option('properties')
+        );
+
+        // Parse the input for the Artisan command into a usable format.
+        $path = $this->argument('path');
         $properties = $this->option('properties');
         $base = $this->option('base');
 
-        $commandStub = __DIR__.'/stubs/command.stub';
-        $handlerStub = __DIR__.'/stubs/handler.stub';
+        $commandInput = $this->parser->parse($path, $properties);
+        $handlerInput = $this->parser->parse($path.'Handler', $properties);
 
-        // We'll generate Command and CommandHandler classes.
-        $this->generator->make($classPath, $commandStub, $base, $properties);
-        $this->generator->make($classPath.'Handler', $handlerStub, $base, $properties);
+        // Actually create the file with the correct boilerplate.
+        $this->generator->make(
+            $commandInput,
+            __DIR__.'/stubs/command.stub',
+            "{$base}/{$path}.php"
+        );
+
+        $this->generator->make(
+            $handlerInput,
+            __DIR__.'/stubs/handler.stub',
+            "{$base}/{$path}Handler.php"
+        );
 
         $this->info('All done! Your two classes have now been generated.');
     }

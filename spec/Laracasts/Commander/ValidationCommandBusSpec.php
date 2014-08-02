@@ -51,5 +51,9 @@ class ValidationCommandBusSpec extends ObjectBehavior
     }
 }
 
+// Stub Stuff
 class ExampleCommand {}
 class ExampleValidator { public function validate($command) {} }
+
+namespace Illuminate\Foundation;
+class Application { function make() {} }
