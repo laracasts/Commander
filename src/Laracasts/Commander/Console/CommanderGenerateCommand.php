@@ -63,21 +63,17 @@ class CommanderGenerateCommand extends Command {
      */
     public function fire()
     {
-        // Parse the input for the Artisan command into a usable format.
-        $input = $this->parser->parse(
-            $this->argument('path'),
-            $this->option('properties')
-        );
-
-        // Parse the input for the Artisan command into a usable format.
         $path = $this->argument('path');
         $properties = $this->option('properties');
         $base = $this->option('base');
 
+        // Parse the input for the Artisan command into a usable format.
+        $input = $this->parser->parse($path, $properties);
+
         $commandInput = $this->parser->parse($path, $properties);
         $handlerInput = $this->parser->parse($path.'Handler', $properties);
 
-        // Actually create the file with the correct boilerplate.
+        // Actually create the files with the correct boilerplate.
         $this->generator->make(
             $commandInput,
             __DIR__.'/stubs/command.stub',
