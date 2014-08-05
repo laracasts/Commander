@@ -121,7 +121,11 @@ trait CommanderTrait {
             }
             else
             {
-                throw new InvalidArgumentException("Unable to map input to command: {$name}");
+            	// if parameter has no default value
+                if(is_null($instance->$name))
+				{
+					throw new InvalidArgumentException("Unable to map input to command: {$name}");
+				}
             }
         }
 
