@@ -46,6 +46,17 @@ class ValidationCommandBus implements CommandBus {
     }
 
     /**
+	 * Remove decorations from the command bus
+     *
+     * @param $className
+     * @return null
+     */
+    public function undecorate()
+    {
+        $this->decorators = [];
+    }
+
+	/**
      * Execute a command with validation.
      *
      * @param $command
