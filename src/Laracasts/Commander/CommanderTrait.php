@@ -31,7 +31,14 @@ trait CommanderTrait {
             $bus->decorate($decorator);
         }
 
-        return $bus->execute($command);
+        try
+        {
+            return $bus->execute($command);
+        }
+        catch(\Exception $commandExecutionException)
+        {
+            throw $commandExecutionException;
+        }
     }
 
     /**
