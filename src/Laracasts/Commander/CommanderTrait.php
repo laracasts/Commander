@@ -66,7 +66,15 @@ trait CommanderTrait {
 
             if (array_key_exists($name, $input))
             {
-                $dependencies[] = $input[$name];
+                if($parameter->getClass() !== null)
+                {
+                    $className = $parameter->getClass()->getName();
+                    $dependencies[] = new $className($input[$name]);
+                }
+                else
+                {
+                    $dependencies[] = $input[$name];
+                }
             }
             elseif ($parameter->isDefaultValueAvailable())
             {
