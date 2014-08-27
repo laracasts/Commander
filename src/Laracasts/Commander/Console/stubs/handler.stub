@@ -1,0 +1,18 @@
+<?php namespace {{ namespace }};
+
+use Laracasts\Commander\CommandHandler;
+
+class {{ name }} implements CommandHandler {
+
+    /**
+     * Handle the command.
+     *
+     * @param object $command
+     * @return void
+     */
+    public function handle($command)
+    {
+
+    }
+
+}

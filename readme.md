@@ -371,6 +371,99 @@ App::bind(
 
 Done!
 
+## File Generation
+
+You'll likely find yourself manually creating lots and lots of commands and handler classes. Instead, use the Artisan command that is included with this package!
+Simply run:
+
+```bash
+php artisan commander:generate Acme/Bar/SubscribeUserCommand
+```
+
+This will generate both `SubscribeUserCommand` and a `SubscribeUserCommandHandler` classes. By default, it will look for that "Acme" directory within "app/". If your base domain directory is somewhere else, pass the `--base="src"`.
+
+#### The Command
+
+```php
+<?php namespace Acme\Bar;
+
+class SubscribeUserCommand {
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+    }
+
+}
+```
+
+#### The Handler
+
+```php
+<?php namespace Acme\Bar;
+
+use Laracasts\Commander\CommandHandler;
+
+class SubscribeUserCommandHandler implements CommandHandler {
+
+    /**
+     * Handle the command.
+     *
+     * @param object $command
+     * @return void
+     */
+    public function handle($command)
+    {
+
+    }
+
+}
+```
+
+Or, if you also want boilerplate for the properties, you can do that as well.
+
+```bash
+php artisan commander:generate Acme/Bar/SubscribeUserCommand --properties="first, last"
+```
+
+When you add the `--properties` flag, the handle class will remain the same, however, the command, itself, will be scaffolded, like so:
+
+```php
+<?php namespace Acme\Bar;
+
+class SubscribeUserCommand {
+
+    /**
+     * @var string
+     */
+    public $first;
+
+    /**
+     * @var string
+     */
+    public $last;
+
+    /**
+     * Constructor
+     *
+     * @param string first
+     * @param string last
+     */
+    public function __construct($first, $last)
+    {
+        $this->first = $first;
+        $this->last = $last;
+    }
+
+}
+```
+
+Nifty, ay? That'll save you a lot of time, so remember to use it.
+
+> When calling this command, use forward slashes for your class path: `Acme/Bar/MyCommand`. If you'd rather use backslashes, you'll need to wrap it in quotes.
+
 ## That Does It!
 
 This can be complicated stuff to read. Be sure to check out the [Commands and Domain Events](https://laracasts.com/series/commands-and-domain-events) series on [Laracasts](https://laracasts.com) to learn more about this stuff.

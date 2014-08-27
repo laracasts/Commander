@@ -1,8 +1,7 @@
 <?php namespace Laracasts\Commander;
 
-use ReflectionClass;
-use InvalidArgumentException;
 use Input, App;
+use InvalidArgumentException;
 
 trait CommanderTrait {
 
@@ -14,7 +13,7 @@ trait CommanderTrait {
      * @param  array $decorators
      * @return mixed
      */
-    public function execute($command, array $input = null, $decorators = [])
+    protected function execute($command, array $input = null, $decorators = [])
     {
         $input = $input ?: Input::all();
 
