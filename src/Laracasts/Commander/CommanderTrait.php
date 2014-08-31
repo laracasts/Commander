@@ -56,9 +56,27 @@ trait CommanderTrait {
      */
     protected function mapInputToCommand($command, array $input)
     {
-        $dependencies = [];
-
         $class = new ReflectionClass($command);
+
+        if(!$class->getConstructor())
+        {
+            return $this->mapInputToCommandProperties($class, $input);
+        }
+        else
+        {
+            return $this->mapInputToCommandConstructor($class, $input);
+        }
+    }
+
+    /**
+     * @param ReflectionClass $class
+     * @param $input
+     * @return object
+     * @throws \InvalidArgumentException
+     */
+    protected function mapInputToCommandConstructor(ReflectionClass $class, array $input)
+    {
+        $dependencies = [];
 
         foreach ($class->getConstructor()->getParameters() as $parameter)
         {
@@ -87,6 +105,30 @@ trait CommanderTrait {
         }
 
         return $class->newInstanceArgs($dependencies);
+
+    }
+
+    /**
+     * @param ReflectionClass $class
+     * @param $input
+     * @throws \InvalidArgumentException
+     * @return object
+     */
+    protected  function mapInputToCommandProperties(ReflectionClass $class, array $input)
+    {
+        $command = $class->newInstance();
+
+        foreach($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $property)
+        {
+            $name = $property->getName();
+
+            if(array_key_exists($name, $input))
+            {
+                $command->{$name} = $input[$name];
+            }
+        }
+
+        return $command;
     }
 
 }
