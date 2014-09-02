@@ -26,9 +26,16 @@ trait CommanderTrait {
         // filter through and register them
         // with the CommandBus, so that they
         // are executed first.
-        foreach ($decorators as $decorator)
+        if (count($decorators))
         {
-            $bus->decorate($decorator);
+            foreach ($decorators as $decorator)
+            {
+                $bus->decorate($decorator);
+            }
+        }
+        else
+        {
+            $bus->undecorate();
         }
 
         return $bus->execute($command);
