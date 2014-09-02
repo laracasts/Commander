@@ -11,7 +11,7 @@ class {{ name }} {
     {{/ properties}}
     /**
      {{# properties }}
-     * @param string {{ . }}
+     * @param string ${{ . }}
      {{/ properties }}
      */
     public function __construct({{ arguments }})
