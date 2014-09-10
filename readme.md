@@ -139,7 +139,7 @@ class JobSanitizer implements CommandBus {
 
 ```php
 $this->execute(PostJobListingCommand::class, null, [
-    'JobSanitizer'
+    'Acme\Jobs\JobSanitizer'
 ]);
 ```
 
