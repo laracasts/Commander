@@ -2,6 +2,7 @@
 composer.phar
 composer.lock
 .DS_Store
+phpunit.xml
 
 tests/_output/*
 tests/acceptance/tmp/*
