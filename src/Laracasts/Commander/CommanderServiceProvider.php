@@ -37,7 +37,7 @@ class CommanderServiceProvider extends ServiceProvider {
     }
 
     /**
-     * Register the command translator binding
+     * Register the command translator binding.
      */
     protected function registerCommandTranslator()
     {
@@ -45,7 +45,7 @@ class CommanderServiceProvider extends ServiceProvider {
     }
 
     /**
-     * Register the desired command bus implementation
+     * Register the command bus implementation.
      */
     protected function registerCommandBus()
     {
@@ -59,7 +59,7 @@ class CommanderServiceProvider extends ServiceProvider {
     }
 
     /**
-     * Register the Artisan command
+     * Register the Artisan command.
      *
      * @return void
      */

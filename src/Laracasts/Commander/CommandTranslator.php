@@ -3,7 +3,7 @@
 interface CommandTranslator {
 
     /**
-     * Translate a command to its handler counterpart
+     * Translate a command to its handler counterpart.
      *
      * @param $command
      * @return mixed
@@ -12,7 +12,7 @@ interface CommandTranslator {
     public function toCommandHandler($command);
 
     /**
-     * Translate a command to its validator counterpart
+     * Translate a command to its validator counterpart.
      *
      * @param $command
      * @return mixed

@@ -7,7 +7,7 @@ use Input, App;
 trait CommanderTrait {
 
     /**
-     * Execute the command
+     * Execute the command.
      *
      * @param  string $command
      * @param  array $input
@@ -22,10 +22,8 @@ trait CommanderTrait {
 
         $bus = $this->getCommandBus();
 
-        // If any decorators are passed, we'll
-        // filter through and register them
-        // with the CommandBus, so that they
-        // are executed first.
+        // If any decorators are passed, we'll filter through and register them
+        // with the CommandBus, so that they are executed first.
         foreach ($decorators as $decorator)
         {
             $bus->decorate($decorator);
@@ -46,11 +44,11 @@ trait CommanderTrait {
 
     /**
      * Map an array of input to a command's properties.
-     * - Code courtesy of Taylor Otwell.
      *
      * @param  string $command
      * @param  array $input
      * @throws InvalidArgumentException
+     * @author Taylor Otwell
      *
      * @return mixed
      */
