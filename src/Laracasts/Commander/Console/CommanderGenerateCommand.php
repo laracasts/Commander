@@ -66,10 +66,13 @@ class CommanderGenerateCommand extends Command {
         $path = $this->argument('path');
         $properties = $this->option('properties');
         $base = $this->option('base');
+        $validator = $this->option('validator');
+        $pathValidator = substr_replace($path, 'Validator', strrpos($path, 'Command'));
 
         // Parse the command input.
         $commandInput = $this->parser->parse($path, $properties);
         $handlerInput = $this->parser->parse($path.'Handler', $properties);
+        $validatorInput = $this->parser->parse($pathValidator, $properties);
 
         // Actually create the files with the correct boilerplate.
         $this->generator->make(
@@ -84,7 +87,20 @@ class CommanderGenerateCommand extends Command {
             "{$base}/{$path}Handler.php"
         );
 
-        $this->info('All done! Your two classes have now been generated.');
+        if ($validator)
+        {
+            $this->generator->make(
+                $validatorInput,
+                __DIR__.'/stubs/validator.stub',
+                "{$base}/{$pathValidator}.php"
+            );
+
+            $this->info('All done! Your three classes have now been generated.');
+        }
+        else
+        {
+            $this->info('All done! Your two classes have now been generated.');
+        }
     }
 
     protected function getArguments()
@@ -103,7 +119,8 @@ class CommanderGenerateCommand extends Command {
     {
         return [
             ['properties', null, InputOption::VALUE_OPTIONAL, 'A comma-separated list of properties for the command.', null],
-            ['base', null, InputOption::VALUE_OPTIONAL, 'The path to where your domain root is located.', 'app']
+            ['base', null, InputOption::VALUE_OPTIONAL, 'The path to where your domain root is located.', 'app'],
+            ['validator', null, InputOption::VALUE_NONE, 'Generate the validator for the command.'],
         ];
     }
 

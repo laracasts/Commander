@@ -374,6 +374,28 @@ class SubscribeUserCommand {
 }
 ```
 
+Add the `--validator` flag to generate the validator for the command:
+
+```php
+<?php namespace Acme\Bar;
+
+class SubscribeUserValidator {
+
+    /**
+     * Validate the command.
+     *
+     * @param object $command
+     * @return void
+     */
+    public function validate($command)
+    {
+
+    }
+
+}
+```
+
+
 Nifty, ay? That'll save you a lot of time, so remember to use it.
 
 > When calling this command, use forward slashes for your class path: `Acme/Bar/MyCommand`. If you'd rather use backslashes, you'll need to wrap it in quotes.
