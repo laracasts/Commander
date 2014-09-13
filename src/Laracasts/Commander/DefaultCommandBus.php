@@ -41,6 +41,8 @@ class DefaultCommandBus implements CommandBus {
     public function decorate($className)
     {
         $this->decorators[] = $className;
+
+        return $this;
     }
 
     /**
