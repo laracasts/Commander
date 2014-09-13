@@ -16,12 +16,12 @@ class DefaultCommandBusSpec extends ObjectBehavior {
         $this->beConstructedWith($app, $translator);
     }
 
-    function xit_is_initializable()
+    function it_is_initializable()
     {
         $this->shouldHaveType('Laracasts\Commander\DefaultCommandBus');
     }
 
-    function xit_handles_a_command(Application $app, CommandStub $command, CommandTranslator $translator, CommandHandlerStub $handler)
+    function it_handles_a_command(Application $app, CommandStub $command, CommandTranslator $translator, CommandHandlerStub $handler)
     {
         $translator->toCommandHandler($command)->willReturn('CommandHandler');
         $app->make('CommandHandler')->willReturn($handler);
