@@ -49,13 +49,7 @@ class CommanderServiceProvider extends ServiceProvider {
      */
     protected function registerCommandBus()
     {
-        $this->app->bindShared('Laracasts\Commander\CommandBus', function ($app)
-        {
-            $default = $app->make('Laracasts\Commander\DefaultCommandBus');
-            $translator = $app->make('Laracasts\Commander\CommandTranslator');
-
-            return new ValidationCommandBus($default, $app, $translator);
-        });
+        $this->app->bindShared('Laracasts\Commander\CommandBus', 'Laracasts\Commander\DefaultCommandBus');
     }
 
     /**
