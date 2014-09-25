@@ -1,21 +1,28 @@
 <?php namespace Laracasts\Commander\Events;
 
+use Laracasts\Commander\Events\Contracts\Dispatcher as DispatcherInterface;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Log\Writer;
 
-class EventDispatcher {
+class EventDispatcher implements DispatcherInterface {
 
     /**
+     * The Dispatcher instance.
+     *
      * @var Dispatcher
      */
     protected $event;
 
     /**
+     * The writer instance.
+     *
      * @var Writer
      */
     protected $log;
 
     /**
+     * Create a new EventDispatcher instance.
+     *
      * @param Dispatcher $event
      * @param Writer $log
      */
@@ -26,7 +33,7 @@ class EventDispatcher {
     }
 
     /**
-     * Dispatch all events
+     * Dispatch all raised events.
      *
      * @param array $events
      */
@@ -43,11 +50,10 @@ class EventDispatcher {
     }
 
     /**
-     * We'll make the fired event name look
-     * just a bit more object-oriented.
+     * Make the fired event name look more object-oriented.
      *
      * @param $event
-     * @return mixed
+     * @return string
      */
     protected function getEventName($event)
     {
