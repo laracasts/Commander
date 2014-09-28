@@ -24,17 +24,4 @@ class BasicCommandTranslator implements CommandTranslator {
         return $handler;
     }
 
-    /**
-     * Translate a command to its validator counterpart
-     *
-     * @param $command
-     * @return mixed
-     */
-    public function toValidator($command)
-    {
-        $commandClass = get_class($command);
-
-        return substr_replace($commandClass, 'Validator', strrpos($commandClass, 'Command'));
-    }
-
 } 
