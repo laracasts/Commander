@@ -3,6 +3,8 @@
 class CommandInputParser {
 
     /**
+     * Parse the command input.
+     *
      * @param $path
      * @param $properties
      * @return CommandInput
@@ -19,6 +21,8 @@ class CommandInputParser {
     }
 
     /**
+     * Parse the properties for a command.
+     *
      * @param $properties
      * @return array
      */

@@ -3,7 +3,6 @@
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use Illuminate\Filesystem\Filesystem;
 
 class CommanderGenerateCommand extends Command {
 
@@ -20,11 +19,6 @@ class CommanderGenerateCommand extends Command {
      * @var string
      */
     protected $description = 'Generate a new command and handler class.';
-
-    /**
-     * @var Filesystem
-     */
-    protected $file;
 
     /**
      * @var CommandInputParser
@@ -81,6 +75,11 @@ class CommanderGenerateCommand extends Command {
         $this->info('All done! Your two classes have now been generated.');
     }
 
+    /**
+     * Get the console command arguments.
+     *
+     * @return array
+     */
     protected function getArguments()
     {
         return [

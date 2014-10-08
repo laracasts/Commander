@@ -6,16 +6,22 @@ use Mustache_Engine;
 class CommandGenerator {
 
     /**
+     * The Filesystem instance.
+     *
      * @var Filesystem
      */
     protected $file;
 
     /**
+     * The Mustache_Engine instance.
+     *
      * @var Mustache_Engine
      */
     protected $mustache;
 
     /**
+     * Creat a new CommandGenerator instance.
+     *
      * @param Filesystem $file
      * @param Mustache_Engine $mustache
      */
@@ -26,6 +32,8 @@ class CommandGenerator {
     }
 
     /**
+     * Generate the files for a new command and handler.
+     * 
      * @param CommandInput $input
      * @param $template
      * @param $destination
