@@ -4,7 +4,6 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Filesystem\Filesystem;
-use Mustache_Engine;
 
 class CommanderGenerateCommand extends Command {
 
@@ -26,11 +25,6 @@ class CommanderGenerateCommand extends Command {
      * @var Filesystem
      */
     protected $file;
-
-    /**
-     * @var Mustache_Engine
-     */
-    protected $mustache;
 
     /**
      * @var CommandInputParser
