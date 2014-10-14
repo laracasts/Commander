@@ -3,7 +3,7 @@
 interface CommandHandler {
 
     /**
-     * Handle the command
+     * Handle the command.
      *
      * @param $command
      * @return mixed

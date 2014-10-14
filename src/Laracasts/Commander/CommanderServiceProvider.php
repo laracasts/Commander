@@ -37,7 +37,7 @@ class CommanderServiceProvider extends ServiceProvider {
     }
 
     /**
-     * Register the command translator binding
+     * Register the command translator binding.
      */
     protected function registerCommandTranslator()
     {
@@ -45,21 +45,18 @@ class CommanderServiceProvider extends ServiceProvider {
     }
 
     /**
-     * Register the desired command bus implementation
+     * Register the command bus implementation.
      */
     protected function registerCommandBus()
     {
-        $this->app->bindShared('Laracasts\Commander\CommandBus', function ($app)
+        $this->app->bindShared('Laracasts\Commander\CommandBus', function($app)
         {
-            $default = $app->make('Laracasts\Commander\DefaultCommandBus');
-            $translator = $app->make('Laracasts\Commander\CommandTranslator');
-
-            return new ValidationCommandBus($default, $app, $translator);
+            return $app->make('Laracasts\Commander\DefaultCommandBus');
         });
     }
 
     /**
-     * Register the Artisan command
+     * Register the Artisan command.
      *
      * @return void
      */
