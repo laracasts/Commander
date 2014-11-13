@@ -2,7 +2,8 @@
 
 use ReflectionClass;
 use InvalidArgumentException;
-use Input, App, Str;
+use Input, App;
+use Illuminate\Support\Str;
 
 trait CommanderTrait {
 
