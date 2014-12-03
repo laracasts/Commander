@@ -54,6 +54,11 @@ trait CommanderTrait {
      */
     protected function mapInputToCommand($command, array $input)
     {
+        if (is_object($command)) {
+
+            return $command;
+        }
+        
         $dependencies = [];
 
         $class = new ReflectionClass($command);
