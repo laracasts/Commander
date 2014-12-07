@@ -49,7 +49,7 @@ class DefaultCommandBus implements CommandBus {
      * @param $className
      * @return null
      */
-    public function undecorate()
+    public function clearDecorators()
     {
         $this->decorators = [];
     }
