@@ -3,12 +3,7 @@
 use Illuminate\Foundation\Application;
 use InvalidArgumentException;
 
-class ValidationCommandBus implements CommandBus {
-
-    /**
-     * @var CommandBus
-     */
-    protected $bus;
+class DefaultCommandBus implements CommandBus {
 
     /**
      * @var Application
@@ -27,9 +22,12 @@ class ValidationCommandBus implements CommandBus {
      */
     protected $decorators = [];
 
-    function __construct(CommandBus $bus, Application $app, CommandTranslator $commandTranslator)
+    /**
+     * @param Application $app
+     * @param CommandTranslator $commandTranslator
+     */
+    function __construct(Application $app, CommandTranslator $commandTranslator)
     {
-        $this->bus = $bus;
         $this->app = $app;
         $this->commandTranslator = $commandTranslator;
     }
@@ -51,43 +49,24 @@ class ValidationCommandBus implements CommandBus {
      * @param $className
      * @return null
      */
-    public function undecorate()
+    public function clearDecorators()
     {
         $this->decorators = [];
     }
 
-	/**
-     * Execute a command with validation.
+    /**
+     * Execute the command
      *
      * @param $command
      * @return mixed
      */
     public function execute($command)
     {
-        // If a validator is "registered," we will
-        // first trigger it, before moving forward.
-        $this->validateCommand($command);
-
-        // Next, we'll execute any registered decorators.
         $this->executeDecorators($command);
 
-        // And finally pass through to the handler class.
-        return $this->bus->execute($command);
-    }
+        $handler = $this->commandTranslator->toCommandHandler($command);
 
-    /**
-     * If appropriate, validate command data.
-     *
-     * @param $command
-     */
-    protected function validateCommand($command)
-    {
-        $validator = $this->commandTranslator->toValidator($command);
-
-        if (class_exists($validator))
-        {
-            $this->app->make($validator)->validate($command);
-        }
+        return $this->app->make($handler)->handle($command);
     }
 
     /**
