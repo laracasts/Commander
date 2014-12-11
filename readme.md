@@ -82,6 +82,14 @@ class JobsController extends \BaseController {
 
 Notice how we are representing the user's instruction (or command) as a readable class: `PostJobListingCommand`. The `execute` method will expect the command's class path, as a string. Above, we're using the helpful `PostJobListingCommand::class` to fetch this. Alternatively, you could manually write out the path as a string.
 
+You can pass, if you like, the data in an associative array as an second argument:
+```
+$this->execute(PostJobListingCommand::class, [
+	'title' => $jobTitle,
+	'description' => $description
+]);
+```
+
 ### The Command DTO
 
 Pretty simply, huh? We make a command to represent the instruction, and then we throw that command into a command bus.
