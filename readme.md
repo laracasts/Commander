@@ -89,7 +89,7 @@ $this->execute(PostJobListingCommand::class, [
 	'title' => $jobTitle,
 	'description' => $description
 ]);
-```php
+```
 
 ### The Command DTO
 
