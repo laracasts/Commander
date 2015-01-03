@@ -2,6 +2,8 @@
 
 This package gives you an easy way to leverage commands and domain events in your Laravel projects.
 
+> Laravel 5 users: this package is no longer required, as the framework includes its own flexible command bus out of the box.
+
 ## Installation
 
 Per usual, install Commander through Composer.
