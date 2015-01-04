@@ -3,6 +3,7 @@
 use ReflectionClass;
 use InvalidArgumentException;
 use Input, App;
+use Illuminate\Support\Str;
 
 trait CommanderTrait {
 
@@ -65,6 +66,10 @@ trait CommanderTrait {
             if (array_key_exists($name, $input))
             {
                 $dependencies[] = $input[$name];
+            }
+            elseif (array_key_exists(Str::snake($name), $input))
+            {
+                $dependencies[] = $input[Str::snake($name)];
             }
             elseif ($parameter->isDefaultValueAvailable())
             {
