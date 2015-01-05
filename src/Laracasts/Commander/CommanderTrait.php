@@ -1,8 +1,7 @@
 <?php namespace Laracasts\Commander;
 
-use ReflectionClass;
-use InvalidArgumentException;
 use Input, App;
+use InvalidArgumentException;
 
 trait CommanderTrait {
 
@@ -54,9 +53,27 @@ trait CommanderTrait {
      */
     protected function mapInputToCommand($command, array $input)
     {
-        $dependencies = [];
-
         $class = new ReflectionClass($command);
+
+        if (is_null($class->getConstructor())) {
+            return $this->mapInputToCommandProperties($input, $class);
+        } else {
+            return $this->mapInputToCommandConstructor($input, $class);
+        }
+    }
+
+    /**
+     * Map an array of input to a command's properties via its constructor
+     *
+     * @param  array $input
+     * @param  $class
+     * @throws InvalidArgumentException
+     *
+     * @return mixed
+     */
+    protected function mapInputToCommandConstructor(array $input, $class)
+    {
+        $dependencies = [];
 
         foreach ($class->getConstructor()->getParameters() as $parameter)
         {
@@ -79,4 +96,36 @@ trait CommanderTrait {
         return $class->newInstanceArgs($dependencies);
     }
 
+    /**
+     * Map an array of input to a command's properties via its public properties
+     *
+     * @param  array $input
+     * @param  $class
+     *
+     * @return mixed
+     */
+    protected function mapInputToCommandProperties(array $input, $class)
+    {
+        $instance = $class->newInstance();
+
+        foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $parameter)
+        {
+            $name = $parameter->getName();
+
+            if (array_key_exists($name, $input))
+            {
+                $instance->$name = $input[$name];
+            }
+            else
+            {
+            	// if parameter has no default value
+                if(is_null($instance->$name))
+				{
+					throw new InvalidArgumentException("Unable to map input to command: {$name}");
+				}
+            }
+        }
+
+        return $instance;
+    }
 }
