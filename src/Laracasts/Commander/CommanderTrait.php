@@ -16,7 +16,7 @@ trait CommanderTrait {
      */
     protected function execute($command, array $input = null, $decorators = [])
     {
-        $input = $input ?: Input::all();
+        $input = $input ? array_merge(Input::all(), $input) : Input::all();
 
         $command = $this->mapInputToCommand($command, $input);
 
