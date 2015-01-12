@@ -24,4 +24,9 @@
         }
     },
     "minimum-stability": "stable"
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.2.x-dev"
+        }
+    }
 }
