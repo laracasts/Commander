@@ -1,10 +1,13 @@
 <?php namespace Laracasts\Commander;
 
-interface Command {
+trait CommandTrait {
 
     /**
      * Return an Array of self
      * @return array
      */
-    public function toArray();
+    public function toArray()
+    {
+        return (array)$this;
+    }
 }
