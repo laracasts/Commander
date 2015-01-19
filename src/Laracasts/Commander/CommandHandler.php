@@ -5,9 +5,9 @@ interface CommandHandler {
     /**
      * Handle the command.
      *
-     * @param $command
+     * @param Command $command
      * @return mixed
      */
-    public function handle($command);
+    public function handle(Command $command);
 
 } 
